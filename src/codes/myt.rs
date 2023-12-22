@@ -1,0 +1,25 @@
+use isocountry::CountryCode;
+use crate::CodeReference;
+const CODES: [CodeReference;21] = [
+	( CountryCode::MYT, "97605", "Passamainty", "Mayotte (general)", "00", "", "", "", "", Some(-12.802), Some(45.2082), Some(5) ),
+	( CountryCode::MYT, "97630", "Acoua", "Acoua", "97601", "", "", "", "", Some(-12.7239), Some(45.0582), Some(5) ),
+	( CountryCode::MYT, "97650", "Bandraboua", "Bandraboua", "97602", "", "", "", "", Some(-12.7044), Some(45.1223), Some(5) ),
+	( CountryCode::MYT, "97660", "Bandrélé", "Bandrele", "97603", "", "", "", "", Some(-12.9128), Some(45.1926), Some(5) ),
+	( CountryCode::MYT, "97620", "Bouéni", "Bouéni", "97604", "", "", "", "", Some(-12.9025), Some(45.0761), Some(5) ),
+	( CountryCode::MYT, "97670", "Chiconi", "Chiconi", "97605", "", "", "", "", Some(-12.8333), Some(45.1106), Some(5) ),
+	( CountryCode::MYT, "97620", "Chirongui", "Chirongui", "97606", "", "", "", "", Some(-12.9319), Some(45.1483), Some(5) ),
+	( CountryCode::MYT, "97660", "Dembeni", "Dembeni", "97607", "", "", "", "", Some(-12.8436), Some(45.1844), Some(5) ),
+	( CountryCode::MYT, "97615", "Dzaoudzi", "Dzaoudzi", "97608", "", "", "", "", Some(-12.7783), Some(45.2837), Some(5) ),
+	( CountryCode::MYT, "97625", "Kani Kéli", "Kani-Kéli", "97609", "", "", "", "", Some(-12.9536), Some(45.1033), Some(5) ),
+	( CountryCode::MYT, "97600", "Koungou", "Koungou", "97610", "", "", "", "", Some(-12.7336), Some(45.2042), Some(5) ),
+	( CountryCode::MYT, "97600", "Mamoudzou", "Mamoudzou", "97611", "", "", "", "", Some(-12.7823), Some(45.2288), Some(5) ),
+	( CountryCode::MYT, "97605", "Mamoudzou", "Mamoudzou", "97611", "", "", "", "", Some(-12.7823), Some(45.2288), Some(5) ),
+	( CountryCode::MYT, "97650", "Mamoudzou", "Mamoudzou", "97611", "", "", "", "", Some(-12.7823), Some(45.2288), Some(5) ),
+	( CountryCode::MYT, "97680", "Mamoudzou", "Mamoudzou", "97611", "", "", "", "", Some(-12.7823), Some(45.2288), Some(5) ),
+	( CountryCode::MYT, "97630", "Mtsamboro", "Mtsamboro", "97612", "", "", "", "", Some(-12.6998), Some(45.0689), Some(5) ),
+	( CountryCode::MYT, "97650", "M'Tsangamouji", "M'Tsangamouji", "97613", "", "", "", "", Some(-12.7594), Some(45.0836), Some(5) ),
+	( CountryCode::MYT, "97670", "Ouangani", "Ouangani", "97614", "", "", "", "", Some(-12.8464), Some(45.1361), Some(5) ),
+	( CountryCode::MYT, "97615", "Pamandzi", "Pamandzi", "97615", "", "", "", "", Some(-12.7949), Some(45.282), Some(5) ),
+	( CountryCode::MYT, "97640", "Sada", "Sada", "97616", "", "", "", "", Some(-12.8505), Some(45.1021), Some(5) ),
+	( CountryCode::MYT, "97680", "Tsingoni", "Tsingoni", "97617", "", "", "", "", Some(-12.7872), Some(45.1028), Some(5) ),
+];

@@ -1,37 +1,27 @@
-use quadtree_rs::{area::AreaBuilder, point::Point, Quadtree};
-use serde::{Deserialize, Deserializer};
+use serde::{Serialize,Deserialize};
 use isocountry::CountryCode;
 use serde;
 
-include!(concat!(env!("OUT_DIR"), "/codes.rs"));
+pub mod codes;
+pub mod indices;
 
-// // associate post code values with an index into the postal code collection
-// static POSTCODES_CODE_INDEX: Lazy<HashMap<String,usize>> = Lazy::new(|| {
+type CodeReference = (
+    CountryCode,
+    &'static str,
+    &'static str,
+    &'static str,
+    &'static str,
+    &'static str,
+    &'static str,
+    &'static str,
+    &'static str,
+    Option<f64>,
+    Option<f64>,
+    Option<u8>
+);
 
-// });
-
-// // associate country codes with a vec of coordinates into the postal code collection
-// static POSTCODES_COUNTRY_INDEX: Lazy<HashMap<CountryCode,Vec<usize>>> = Lazy::new(|| {
-
-// });
-
-// // associate coordinates with an index into the postal code collection
-// static POSTCODES_COORDINATE_INDEX: Lazy<Quadtree::<u64, usize>> = Lazy::new(|| {
-
-// });
-
-fn country<'de, D>(deserializer: D) -> Result<CountryCode, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    Deserialize::deserialize(deserializer)
-        .and_then(|s| CountryCode::for_alpha2(s)
-            .map_err(serde::de::Error::custom))
-}
-
-#[derive(Deserialize, Debug)]
+#[derive(Serialize,Deserialize, Debug)]
 pub struct PostalCode {
-    #[serde(deserialize_with = "country")]
     country_code: CountryCode,
     postal_code: String,
     place_name: String,
@@ -53,18 +43,19 @@ impl PostalCode {
         unimplemented!();
     }
 
-    pub fn for_country() -> Vec<Self> {
+    pub fn for_country(country: CountryCode) -> Vec<Self> {
         unimplemented!();
     }
 
-    pub fn for_place() -> Vec<Self> {
+    pub fn for_region(longitude: f64, latitude: f64) -> Vec<Self> {
+        unimplemented!();
+    }
+
+    pub fn for_search(value: String) -> Vec<Self> {
         unimplemented!();
     }
 
 }
-
-
-
 
 #[cfg(test)]
 mod tests {

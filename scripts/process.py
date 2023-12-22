@@ -11,6 +11,7 @@ COUNTRIES_URL: str = 'https://www.cia.gov/the-world-factbook/references/country-
 
 POSTCODES_PATH: str = 'data/postcodes.csv'
 POSTCODES_TEXT: str = 'data/postcodes.txt'
+POSTCODES_CODE: str = 'src/codes/'
 
 INDEX1_PATH: str = 'data/index/alpha2_to_alpha3.csv'
 INDEX2_PATH: str = 'data/index/alpha2_to_code.csv'
@@ -18,6 +19,10 @@ INDEX3_PATH: str = 'data/index/code_to_alpha2.csv'
 
 def download_countries(url: str):
     """Download the country data and write it into the output file"""
+    Path(INDEX1_PATH).parent.mkdir(exist_ok=True)
+    Path(INDEX2_PATH).parent.mkdir(exist_ok=True)
+    Path(INDEX3_PATH).parent.mkdir(exist_ok=True)
+
     response = requests.get(url)
     soup = BeautifulSoup(response.text,features='lxml')
 
@@ -26,6 +31,14 @@ def download_countries(url: str):
     alpha2_to_alpha3 = open(INDEX1_PATH,'w')
     alpha2_to_code = open(INDEX2_PATH,'w')
     code_to_alpha2 = open(INDEX3_PATH,'w')
+
+    # manually add this one because it's not in the list
+    # for some reason
+    alpha2_to_alpha3.write(f'AX,ALA\n')
+
+    alpha2_to_alpha3_dict = {}
+    alpha2_to_code_dict = {}
+    code_to_alpha2_dict = {}
 
     for row in table.findAll('tr'):
         col = row.findAll('td')
@@ -43,9 +56,18 @@ def download_countries(url: str):
                 alpha3 = info[1]
                 code = info[2]
 
-                alpha2_to_alpha3.write(f'{alpha2},{alpha3}\n')
-                alpha2_to_code.write(f'{alpha2},{code}\n')
-                code_to_alpha2.write(f'{code},{alpha2}\n')
+                alpha2_to_alpha3_dict[alpha2] = alpha3
+                alpha2_to_code_dict[alpha2] = code
+                code_to_alpha2_dict[code] = alpha2
+
+    for key, value in alpha2_to_alpha3_dict.items():
+        alpha2_to_alpha3.write(f'{key},{value}\n')
+
+    for key, value in alpha2_to_code_dict.items():
+        alpha2_to_code.write(f'{key},{value}\n')
+
+    for key, value in code_to_alpha2_dict.items():
+        code_to_alpha2.write(f'{key},{value}\n')
 
     alpha2_to_alpha3.close()
     alpha2_to_code.close()
@@ -74,42 +96,115 @@ def download_postcodes(url: str, file: str):
     # remove the zip file
     tmppath.unlink()
 
-def process_postcodes(txt: str, csv: str):
+def process_postcodes(txtpath: str, csvpath: str):
     """Convert the postcode data to a csv file and clean it up"""
     data = []
 
-    # open the data file for processing
-    with open(txt) as f:
+    input_file = open(txtpath,newline='')
+    output_file = open(csvpath,'w')
+
+    reader = csv.reader(input_file, delimiter='\t')
+    writer = csv.writer(output_file, delimiter=',')
+
+    for row in reader:
+        writer.writerow(row)
+
+    input_file.close()
+    output_file.close()
+
+def generate_postcodes(lookup: str, csvpath: str, output: str):
+    """Build rust structs for each postcode record"""
+    folder = Path(output)
+    country = {}
+    indices = {}
+    export = ""
+    codes = {}
+
+    with open(lookup) as f:
         for line in f:
+            line = line.strip().split(',')
+            code = line[1]
+            country[line[0]] = code
+            indices[code] = 0
 
-            # remove newlines and escape quotes
-            line = line              \
-                .strip()             \
-                .replace('\n','')    \
-                .replace('"','\\"')  \
-                .replace('\'','\\\'')
-            
-            result = []
+            export += f"pub mod {code.lower()};\n"
 
-            # split on tabs and quote column values 
-            # that contain commas
-            for part in line.split('\t'):
-                if ',' in part:
-                    result.append(f'"{part}"')
-                else:
-                    result.append(part)
+            codes[code] = []
 
-            # rejoin the parts into a comma-delimited 
-            # string
-            data.append(','.join(result))
+    with open(folder / "mod.rs",'w') as f:
+        f.write(export)
 
-    # write the new csv data out to the csv file
-    with open(csv,'w') as f:
-        f.write('\n'.join(data))
+    with open(csvpath,newline='') as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            country_code = country[row[0]]
+            index = indices[country_code]
 
-    Path(txt).unlink(missing_ok=True)
+            postal_code = row[1]
+            place_name = row[2]
+            admin_name1 = row[3]
+            admin_code1 = row[4]
+            admin_name2 = row[5]
+            admin_code2 = row[6]
+            admin_name3 = row[7]
+            admin_code3 = row[8]
+
+            latitude = 'None'
+            longitude = 'None'
+            accuracy = 'None'
+
+            if len(row) > 9 and row[9].strip():
+                value = float(row[9].strip())
+                display = max('{:.2f}'.format(value),str(value),key=len)
+                latitude = f"Some({display})"
+
+            if len(row) > 10 and row[10].strip():
+                value = float(row[10].strip())
+                display = max('{:.2f}'.format(value),str(value),key=len)
+                longitude = f"Some({display})"
+
+            if len(row) > 11 and row[11].strip():
+                accuracy = f"Some({row[11].strip()})"
+
+            codes[country_code].append("( CountryCode::{}, \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", {}, {}, {} )".format(
+                country_code,
+                postal_code,
+                place_name,
+                admin_name1,
+                admin_code1,
+                admin_name2,
+                admin_code2,
+                admin_name3,
+                admin_code3,
+                latitude,
+                longitude,
+                accuracy,
+            ))
+
+            indices[country_code] += 1
+
+    for (code, records) in codes.items():
+        path = folder / f"{code.lower()}.rs"
+        path.unlink(missing_ok=True)
+        count = len(records)
+
+        with open(path,'w') as f:
+            if count > 0:
+                f.write("use isocountry::CountryCode;\n")
+
+            f.write("use crate::CodeReference;\n")
+
+            f.write(f"const CODES: [CodeReference;{count}] = [\n")
+
+            for record in records:
+                f.write(f"\t{record},\n")
+
+            f.write("];")
+
 
 if __name__=='__main__':
-    # download_countries(COUNTRIES_URL)
-    # download_postcodes(POSTCODES_URL, POSTCODES_TEXT)
+    download_postcodes(POSTCODES_URL, POSTCODES_TEXT)
     process_postcodes(POSTCODES_TEXT, POSTCODES_PATH)
+    download_countries(COUNTRIES_URL)
+
+    generate_postcodes(INDEX1_PATH,POSTCODES_PATH,POSTCODES_CODE)

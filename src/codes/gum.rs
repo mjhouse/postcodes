@@ -1,0 +1,25 @@
+use isocountry::CountryCode;
+use crate::CodeReference;
+const CODES: [CodeReference;21] = [
+	( CountryCode::GUM, "96910", "Hagatna", "Gu", "66", "Guam", "010", "", "", Some(13.452), Some(144.7465), Some(6) ),
+	( CountryCode::GUM, "96911", "Tamuning", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96912", "Dededo", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96913", "Barrigada", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), Some(6) ),
+	( CountryCode::GUM, "96914", "Yona", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96915", "Santa Rita", "Gu", "66", "Guam", "010", "", "", Some(13.3633), Some(144.7102), Some(6) ),
+	( CountryCode::GUM, "96916", "Merizo", "Gu", "66", "Guam", "010", "", "", Some(13.2637), Some(144.7016), Some(6) ),
+	( CountryCode::GUM, "96917", "Inarajan", "Gu", "66", "Guam", "010", "", "", Some(13.2944), Some(144.7211), Some(6) ),
+	( CountryCode::GUM, "96918", "Umatac", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96919", "Agana Heights", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96921", "Barrigada", "Gu", "66", "Guam", "010", "", "", Some(13.4593), Some(144.7942), Some(6) ),
+	( CountryCode::GUM, "96922", "Asan", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96923", "Mangilao", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96925", "Piti", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96926", "Sinajana", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96927", "Mongmong", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96928", "Agat", "Gu", "66", "Guam", "010", "", "", Some(13.3893), Some(144.6604), Some(6) ),
+	( CountryCode::GUM, "96929", "Yigo", "Gu", "66", "Guam", "010", "", "", Some(13.5702), Some(144.8834), Some(6) ),
+	( CountryCode::GUM, "96930", "Talofofo", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96931", "Tamuning", "Gu", "66", "Guam", "010", "", "", Some(13.4443), Some(144.7863), None ),
+	( CountryCode::GUM, "96932", "Hagatna", "Gu", "66", "Guam", "010", "", "", Some(13.4746), Some(144.7464), Some(6) ),
+];
